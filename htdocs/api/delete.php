@@ -1,3 +1,4 @@
+
 <?php
 
 include("token.php");
@@ -5,14 +6,13 @@ include("token.php");
 if ($token_status) {
     // date_default_timezone_set("Asia/Kolkata");
     // $today = date('Y-m-d');
+    $name="";
+    // $name = $json_data['name'];
+    // $mo = $json_data['mo'];
 
-    $name = $json_data['name'];
-    $password=$json_data['password'];
-    $mo = $json_data['mo'];
 
 
-    $sqlRes = mysqli_query($conn, "INSERT INTO leads (name,password,mo) VALUES ('$name',$password, '$mo')");
-
+    $sqlRes = mysqli_query($conn, "DELETE FROM leads WHERE name = '$name'");
 
     $sqlRes = mysqli_query($conn, "SELECT * FROM leads");
 
