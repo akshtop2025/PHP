@@ -1,0 +1,173 @@
+
+for the the get data from database api only show data
+
+<?php
+include("token.php");
+
+// Assuming $conn is defined in token.php
+
+$sql = "SELECT id, images, path FROM images";
+$result = $conn->query($sql);
+
+// Check if there are any records
+if ($result !== false && $result->num_rows > 0) {
+    // Array to store image records
+    $images = array();
+
+    // Fetch image records from result set
+    while($row = $result->fetch_assoc()) {
+        // Add image record to array
+        $images[] = $row;
+    }
+
+    // Close database connection
+    $conn->close();
+
+    // Return image records as JSON
+    echo json_encode($images);
+} else {
+    // No records found
+    echo json_encode(array('message' => 'No images found'));
+}
+?>
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+include("token.php");
+
+// Assuming $conn is defined in token.php
+
+$sql = "SELECT id, images, path FROM images";
+$result = $conn->query($sql);
+
+// Check if there are any records
+if ($result !== false && $result->num_rows > 0) {
+    // Array to store image records
+    $images = array();
+
+    // Fetch image records from result set
+    while($row = $result->fetch_assoc()) {
+        // Add image record to array
+        $images[] = $row;
+    }
+
+    // Close database connection
+    $conn->close();
+
+    // Return image records as JSON
+    echo json_encode($images);
+} else {
+    // No records found
+    echo json_encode(array('message' => 'No images found'));
+}
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------
+
+registration_login code  api
+
+<?php
+include("token.php");
+
+// Check if token status is valid
+if ($token_status) {
+    $json_data = json_decode(file_get_contents('php://input'), true);
+
+    $name = $json_data['name'] ?? '';
+    $password = $json_data['password'] ?? '';
+    $mo = $json_data['mo'] ?? '';
+
+    $msg = '';
+    $isSuccess = false;
+    $data = [];
+
+    if (!empty($name) && !empty($password) && !empty($mo)) {
+        $insertQuery = "INSERT INTO leads (name, password, mo) VALUES (?, ?, ?)";
+        $insertStmt = $conn->prepare($insertQuery);
+        $insertStmt->bind_param("sss", $name, $password, $mo);
+        if ($insertStmt->execute()) {
+            $msg = "Data inserted successfully.";
+            $isSuccess = true;
+        } else {
+            $msg = "Error inserting data.";
+        }
+    }
+
+    if (!empty($password) && !empty($mo)) {
+        $selectQuery = "SELECT * FROM leads WHERE password = ? AND mo = ?";
+        $selectStmt = $conn->prepare($selectQuery);
+        $selectStmt->bind_param("ss", $password, $mo);
+        $selectStmt->execute();
+        $result = $selectStmt->get_result();
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+            $msg = "Login successful.";
+            $isSuccess = true;
+        } else {
+            $msg = "Invalid number and password.";
+        }
+    }
+
+    // if ($token_status) {
+    //     $sqlRes = mysqli_query($conn, "SELECT * FROM leads");
+    //     $data = [];
+    //     if (mysqli_num_rows($sqlRes) > 0) {
+    //         while ($row = mysqli_fetch_assoc($sqlRes)) {
+    //             $data[] = $row;
+    //         }
+    //         $msg = "successfully verified";
+    //         $isSuccess = true;
+    //     } else {
+    //         $msg = "invalid username and password";
+    //         $isSuccess = false;
+    //     }
+    //     $total_Leads = mysqli_num_rows($sqlRes);
+    //     // echo json_encode(['data' => $data, 'status' => 200, 'msg' => $msg, 'isSuccess' => $isSuccess, 'total_lead' => $total_Leads]);
+    // }
+    
+    
+} else {
+    $msg = "Invalid token.";
+}
+
+$response = [
+    'data' => $data,
+    'status' => 200,
+    'msg' => $msg,
+    'isSuccess' => $isSuccess
+];
+
+echo json_encode($response);
+?>

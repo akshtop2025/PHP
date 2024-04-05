@@ -1,6 +1,10 @@
 <?php
 
 include("connection.php");
+// if you use  image thane  add this code..
+// include("connectionn.php");
+// product data insert and get data from database api
+// include("product_data.php");
 header('Content-Type:application/json');
 $json_data = json_decode(file_get_contents('php://input'), true);
 $all_headers = getallheaders();
