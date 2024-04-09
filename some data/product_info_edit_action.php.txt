@@ -1,0 +1,73 @@
+<?php 
+session_start();
+if(isset($_SESSION["custid"])){
+include("connection.php");
+$custid=$_SESSION["custid"];
+$custid_sql = mysqli_query($conn,"SELECT * FROM  tbl_users where id='$custid'");
+                                  $custid_row= mysqli_fetch_array($custid_sql);    
+                                  $tbl_roles_id=$custid_row['tbl_roles_id'];  
+                                  $city_id= $_GET["city_id"];  
+
+
+
+  
+
+if (isset($_POST['submit_sms'])) { 
+	 
+	date_default_timezone_set("Asia/Kolkata");
+	$today= date('Y-m-d');
+$pro1 = mysqli_real_escape_string($conn,$_REQUEST['pro1']); 
+$pro2 = mysqli_real_escape_string($conn,$_REQUEST['pro2']); 
+$pro3 = mysqli_real_escape_string($conn,$_REQUEST['pro3']);
+$pro4 = mysqli_real_escape_string($conn,$_REQUEST['pro4']);
+
+
+$import="INSERT into tbl_info(service,amount,offer,Time_set) values('$pro1','$pro2','$pro3','$pro4')";
+$result=mysqli_query($conn,$import);
+
+    ?>
+<script language="javascript">window.location.href="product_list.php";</script>
+<?php 
+  
+}
+
+
+
+
+if (isset($_POST['submit_email_update'])) { 
+	 
+	date_default_timezone_set("Asia/Kolkata");
+	$today= date('Y-m-d');
+	$cm_id = $_REQUEST['token']; 
+$pro1 = mysqli_real_escape_string($conn,$_REQUEST['pro1']); 
+$pro2 = mysqli_real_escape_string($conn,$_REQUEST['pro2']); 
+$pro3 = mysqli_real_escape_string($conn,$_REQUEST['pro3']);
+$pro4 = mysqli_real_escape_string($conn,$_REQUEST['pro4']);
+
+
+
+
+  $result = mysqli_query($conn,"UPDATE tbl_info SET service='$pro1',amount='$pro2',offer='$pro3',Time_set='$pro4' WHERE id='$cm_id'");
+
+    ?>
+<script language="javascript">window.location.href="product_list.php";</script>
+<?php 
+  
+}
+
+
+
+
+ 
+?>
+<?php }
+else
+{
+?>
+<script language="javascript">window.location.href="login.php";</script>
+<?php   
+}?>
+
+
+
+
